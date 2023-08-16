@@ -3,10 +3,9 @@
 #include "CipherLibrary.h"
 #include <fstream>
 #include <iostream>
+#include <string>
 
-#pragma unmanaged
-
-
+using namespace std;
 
 BOOL APIENTRY CipherLibrary( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -24,22 +23,22 @@ BOOL APIENTRY CipherLibrary( HMODULE hModule,
     return TRUE;
 }
 
-static std::string encryptFile(const std::string& input, int key)
+CIPHERLIBRARY_API string encryptFile(const string& input, int key)
 {
-	std::string result = input;
+	string result = input;
 	for (char& c : result)
 	{
-		c = static_cast<char>(c + key - 100929);
+		c = static_cast<char>(c + key + 835294858);
 	}
 	return result;
 }
 
-static std::string decryptFile(const std::string& input, int key)
+CIPHERLIBRARY_API string decryptFile(const string& input, int key)
 {
-	std::string result = input;
+	string result = input;
 	for (char& c : result)
 	{
-		c = static_cast<char>(c - key + 100929);
+		c = static_cast<char>(c - key - 835294858);
 	}
 	return result;
 }
@@ -48,19 +47,19 @@ CIPHERLIBRARY_API void getEncryptedResult(const char* inputFilePath, const char*
 {
 	try
 	{
-		std::ifstream inputFile(inputFilePath);
-		std::string content((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
+		ifstream inputFile(inputFilePath);
+		string content((istreambuf_iterator<char>(inputFile)), istreambuf_iterator<char>());
 		inputFile.close();
 
-		std::string encryptedContent = encryptFile(content, key);
+		string encryptedContent = encryptFile(content, key);
 
-		std::ofstream outputFile(outputFilePath);
+		ofstream outputFile(outputFilePath);
 		outputFile << encryptedContent;
 		outputFile.close();
 	}
-	catch (const std::exception& ex)
+	catch (const exception& ex)
 	{
-		MessageBoxA(nullptr, ("An error occurred: " + std::string(ex.what())).c_str(), "Error", MB_OK);
+		MessageBoxA(nullptr, ("An error occurred: " + string(ex.what())).c_str(), "Error", MB_OK);
 	}
 }
 
@@ -68,19 +67,19 @@ CIPHERLIBRARY_API void getDecryptedResult(const char* inputFilePath, const char*
 {
 	try
 	{
-		std::ifstream inputFile(inputFilePath);
-		std::string content((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
+		ifstream inputFile(inputFilePath);
+		string content((istreambuf_iterator<char>(inputFile)), istreambuf_iterator<char>());
 		inputFile.close();
 
-		std::string decryptedContent = decryptFile(content, key);
+		string decryptedContent = decryptFile(content, key);
 
-		std::ofstream outputFile(outputFilePath);
+		ofstream outputFile(outputFilePath);
 		outputFile << decryptedContent;
 		outputFile.close();
 	}
-	catch (const std::exception& ex)
+	catch (const exception& ex)
 	{
-		MessageBoxA(nullptr, ("An error occurred: " + std::string(ex.what())).c_str(), "Error", MB_OK);
+		MessageBoxA(nullptr, ("An error occurred: " + string(ex.what())).c_str(), "Error", MB_OK);
 	}
 }
 
